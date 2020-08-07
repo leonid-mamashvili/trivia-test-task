@@ -44,15 +44,11 @@ namespace TRIVIA_GAME_API
 
             services.AddDataCreator();
 
+            services.AddCors();
+
             services.AddSignalR();
 
             services.ConfigureLoggerService();
-
-            services.AddCors(options =>
-            {
-                options.AddPolicy("AllowAllOrigins",
-                    builder => builder.AllowAnyOrigin());
-            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -80,7 +76,10 @@ namespace TRIVIA_GAME_API
 
             app.ConfigureCustomExceptionMiddleware();
 
-            app.UseCors("AllowAllOrigins");
+            var frontEndUrl = Configuration.GetValue<string>("UrlFrontEnd");
+            app.UseCors(
+                options => options.WithOrigins(frontEndUrl).AllowAnyMethod()
+                );
 
             app.UseHttpsRedirection();
 
@@ -90,7 +89,9 @@ namespace TRIVIA_GAME_API
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHub<TriviaHub>("/send");
                 endpoints.MapHub<TriviaHub>("/join");
+                endpoints.MapHub<TriviaHub>("/leave");
             });
 
            
