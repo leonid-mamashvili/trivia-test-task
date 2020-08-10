@@ -15,12 +15,12 @@ namespace TRIVIA_GAME_API.ServiceExtensions
 {
     public static class ServiceProviderExtensions
     {
-        public static void ConfigureRepositoryWrapper(this IServiceCollection services)
+        public static void ConfigureRepositoryWrapper (this IServiceCollection services)
         {
             services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
         }
 
-        public static void ConfigureDBContext(this IServiceCollection services, IConfiguration config)
+        public static void ConfigureDBContext (this IServiceCollection services, IConfiguration config)
         {
             string connection = config.GetConnectionString("DefaultConnection");
             services.AddDbContext<TriviaContext>(opts =>
@@ -28,12 +28,12 @@ namespace TRIVIA_GAME_API.ServiceExtensions
         }
         
 
-        public static void AddDataCreator(this IServiceCollection serivces)
+        public static void AddDataCreator (this IServiceCollection serivces)
         {
             serivces.AddTransient<IDataCreatorService, DataCreatorService>();
         }
 
-        public static void AddServicesForModels(this IServiceCollection service)
+        public static void AddServicesForModels (this IServiceCollection service)
         {
             service.AddScoped<IModelCreatorService, ModelCreatorService>();
             service.AddTransient<ICategoryService, CategoryService>();
@@ -41,11 +41,15 @@ namespace TRIVIA_GAME_API.ServiceExtensions
             service.AddTransient<IQuestionService, QuestionService>();
         }
 
-        public static void ConfigureLoggerService(this IServiceCollection services)
+        public static void ConfigureLoggerService (this IServiceCollection services)
         {
             services.AddSingleton<ILoggerManager, LoggerManager>();
         }
 
+        public static void ConfigureHubService (this IServiceCollection services)
+        {
+            services.AddSingleton<ITriviaHubService, TriviaHubService>();
+        }
 
     }
 }
